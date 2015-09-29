@@ -69,7 +69,7 @@ local makeTurns = {
 			return Lib.Mat.RXF(angle, ...)
 		end,
 		c = { n = "d", s = "u", e = "e", w = "w", u = "n", d = "s", c = "c", },
-	}
+	},
 	-- Turn (pitch) up
 	s = {
 		F = function (angle, ...)
@@ -83,7 +83,7 @@ local makeTurns = {
 			return Lib.Mat.RYF(-angle, ...)
 		end,
 		c = { n = "w", s = "e", e = "n", w = "s", u = "u", d = "d", c = "c", },
-	}
+	},
 	-- Turn (yaw) right
 	d = {
 		F = function (angle, ...)

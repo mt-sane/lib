@@ -28,6 +28,8 @@ end
 -- in degrees.
 -- Optionally a cash can be used.
 function Lib.Mat.RXM(angle, cash)
+	angle = angle % 360
+	if angle < 0 then angle = 360 - angle end
 	local cashed_item = cash and cash[angle]
 	if cashed_item then return cashed_item end
 
@@ -50,6 +52,8 @@ end
 -- in degrees.
 -- Optionally a cash can be used.
 function Lib.Mat.RYM(angle, cash)
+	angle = angle % 360
+	if angle < 0 then angle = 360 - angle end
 	local cashed_item = cash and cash[angle]
 	if cashed_item then return cashed_item end
 
@@ -72,6 +76,8 @@ end
 -- in degrees.
 -- Optionally a cash can be used.
 function Lib.Mat.RZM(angle, cash)
+	angle = angle % 360
+	if angle < 0 then angle = 360 - angle end
 	local cashed_item = cash and cash[angle]
 	if cashed_item then return cashed_item end
 
@@ -90,35 +96,56 @@ end
 
 -- Rotation functions
 
--- Rotates v about x 90°.
-function Lib.Mat.PitchDown90(v)
+-- Rotates v about any axis 0°
+function Lib.Mat.R0(v) 
+	return v.x, v.y, v.z
+end
+
+-- Rotates v about x 90° or -270°.
+function Lib.Mat.RX90(v)
 	return v.x, -v.z, v.y
 end
 
--- Rotates v about x -90°.
-function Lib.Mat.PitchUp90(v)
+-- Rotates v about x 180° or -180°.
+function Lib.Mat.RX180(v)
+	return v.x, -v.y, -v.z
+end
+
+-- Rotates v about x 270° or -90°.
+function Lib.Mat.RX270(v)
 	return v.x, v.z, -v.y
 end
 
--- Rotates v about y 90°.
-function Lib.Mat.YawRight90(v)
+-- Rotates v about y 90° or -270°.
+function Lib.Mat.RY90(v)
 	return v.z, v.y, -v.x
 end
 
--- Rotates v about y -90°.
-function Lib.Mat.YawLeft90(v)
+-- Rotates v about y 180° or -180°.
+function Lib.Mat.RY180(v)
+	return -v.x, v.y, -v.z
+end
+
+-- Rotates v about y 270° or -90°.
+function Lib.Mat.RY270(v)
 	return -v.z, v.y, v.x
 end
 
--- Rotates v about z 90°.
-function Lib.Mat.RollLeft90(v)
+-- Rotates v about z 90° or -270°.
+function Lib.Mat.RZ90(v)
 	return -v.y, v.x, v.z
 end
 
--- Rotates v about z -90°.
-function Lib.Mat.RollRight90(v)
+-- Rotates v about z 180° or -180°.
+function Lib.Mat.RZ180(v)
+	return -v.x, -v.y, v.z
+end
+
+-- Rotates v about z 270° or -90°.
+function Lib.Mat.RZ270(v)
 	return v.y, -v.x, v.z
 end
+
 
 -- Returns the 3d rotation function
 -- for a rotation about the x axis 
@@ -126,14 +153,20 @@ end
 -- in degrees.
 -- Optionally a cash can be used.
 function Lib.Mat.RXF(angle, cash)
+	angle = angle % 360
+	if angle < 0 then angle = 360 - angle end
 	local cashed_item = cash and cash[angle]
 	if cashed_item then return cashed_item end
 	
 	local f
-	if angle == 90 then
-		f = Lib.Mat.PitchDown90
-	elseif angle == -90 then
-		f = Lib.Mat.PitchUp90
+	if angle == 0 then
+		f = Lib.Mat.R0
+	elseif angle == 90 then
+		f = Lib.Mat.RX90
+	elseif angle == 180 then
+		f = Lib.Mat.RX180
+	elseif angle == 270 then
+		f = Lib.Mat.RX270
 	else
 		local r = math.rad(angle)
 		local s = math.sin(r)
@@ -157,14 +190,20 @@ end
 -- in degrees.
 -- Optionally a cash can be used.
 function Lib.Mat.RYF(angle, cash)
+	angle = angle % 360
+	if angle < 0 then angle = 360 - angle end
 	local cashed_item = cash and cash[angle]
 	if cashed_item then return cashed_item end
 
 	local f
-	if angle == 90 then
-		f = Lib.Mat.YawRight90
-	elseif angle == -90 then
-		f = Lib.Mat.YawLeft90
+	if angle == 0 then
+		f = Lib.Mat.R0
+	elseif angle == 90 then
+		f = Lib.Mat.RY90
+	elseif angle == 180 then
+		f = Lib.Mat.RY180
+	elseif angle == 270 then
+		f = Lib.Mat.RY270
 	else
 		local r = math.rad(angle)
 		local s = math.sin(r)
@@ -188,14 +227,20 @@ end
 -- in degrees.
 -- Optionally a cash can be used.
 function Lib.Mat.RZF(angle, cash)
+	angle = angle % 360
+	if angle < 0 then angle = 360 - angle end
 	local cashed_item = cash and cash[angle]
 	if cashed_item then return cashed_item end
 
 	local f
-	if angle == 90 then
-		f = Lib.Mat.RollLeft90
-	elseif angle == -90 then
-		f = Lib.Mat.RollRight90
+	if angle == 0 then
+		f = Lib.Mat.R0
+	elseif angle == 90 then
+		f = Lib.Mat.RZ90
+	elseif angle == 180 then
+		f = Lib.Mat.RZ180
+	elseif angle == 270 then
+		f = Lib.Mat.RZ270
 	else
 		local r = math.rad(angle)
 		local s = math.sin(r)
@@ -218,8 +263,8 @@ end
 -- using the given angle 
 -- in degrees.
 -- Optionally a cash can be used.
-function Lib.Mat.RX(v, ...)
-	return Lib.Mat.RXF(...)(v)
+function Lib.Mat.RX(v, angle, cash)
+	return vector.new(Lib.Mat.RXF(angle, cash)(v))
 end
 
 -- Rotates v 
@@ -227,8 +272,8 @@ end
 -- using the given angle 
 -- in degrees.
 -- Optionally a cash can be used.
-function Lib.Mat.RY(v, ...)
-	return Lib.Mat.RXF(...)(v)
+function Lib.Mat.RY(v, angle, ...)
+	return vector.new(Lib.Mat.RYF(angle, cash)(v))
 end
 
 -- Rotates v 
@@ -236,8 +281,8 @@ end
 -- using the given angle 
 -- in degrees.
 -- Optionally a cash can be used.
-function Lib.Mat.RZ(v, ...)
-	return Lib.Mat.RXF(...)(v)
+function Lib.Mat.RZ(v, angle, ...)
+	return vector.new(Lib.Mat.RZF(angle, cash)(v))
 end
 
 
